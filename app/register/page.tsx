@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -21,7 +22,7 @@ import { passwordMatchSchema } from "@/validation/passwordMatchSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { registerUser } from "./action";
+import { registerUser } from "./actions";
 import Link from "next/link";
 
 const formSchema = z
@@ -127,6 +128,11 @@ export default function Register() {
                 </form>
               </Form>
             </CardContent>
+            <CardFooter className="flex-col gap-2">
+          <div className="text-muted-foreground text-xs">
+            アカウントを既に持っていますか？{" "}<Link href="/login" className="underline">ログイン</Link>
+          </div>
+        </CardFooter>
         </Card>
       )}
     </main>

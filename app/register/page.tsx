@@ -16,13 +16,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { passwordMatchSchema } from "@/validation/passwordMatchSchema";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { registerUser } from "./action";
 
 // const formSchema = z.object({
 //   email: z.string().email(),
-//   password: z.string().min(5),
+//   password: z.string().min(5,"Password must contain at least 5 characters"),
 //   passwordConfirm: z.string(),
 // });
 
@@ -30,16 +33,7 @@ const formSchema = z.object({
   email: z
     .string()
     .email("有効なメールアドレスを入力してください"), // 日本語のカスタムメッセージ
-  password: z
-    .string()
-    .min(5, "パスワードは5文字以上で入力してください"), // 最低文字数の日本語メッセージ
-  passwordConfirm: z
-    .string()
-    .min(1, "パスワード確認を入力してください") // パスワード確認のメッセージ
-}).refine((data) => data.password === data.passwordConfirm, {
-  path: ["passwordConfirm"], // エラーメッセージを表示するフィールド
-  message: "パスワードが一致しません", // エラーメッセージ
-});
+}).and(passwordMatchSchema);
 
 export default function Register() {
   //z.infer Zodライブラリで定義したスキーマから自動的にTypeScriptの型を推論するための機能
@@ -53,7 +47,14 @@ export default function Register() {
       passwordConfirm: "",
     },
   });
-  const handleSubmit = async (data: z.infer<typeof formSchema>) => {};
+  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+    const response = await registerUser({
+      email:data.email,
+      password:data.password,
+      passwordConfirm:data.passwordConfirm
+    })
+    console.log(response)
+  };
 
   return (
     <main className="flex justify-center items-center min-h-screen">
@@ -63,7 +64,7 @@ export default function Register() {
           <CardDescription>新規アカウント登録をしてください</CardDescription>
           <CardContent className="px-0">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(handleSubmit)}>
+              <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-2">
                 <FormField
                   control={form.control}
                   name="email"

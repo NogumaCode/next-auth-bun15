@@ -2,9 +2,9 @@
 
 import { passwordMatchSchema } from "@/validation/passwordMatchSchema";
 import { z } from "zod";
-import argon2 from "argon2";
 import db from "@/db/drizzle";
 import { users } from "@/db/usersSchema";
+import { hash } from "bcryptjs";
 
 type DatabaseError = Error & {
   code?: string;
@@ -41,12 +41,7 @@ export const registerUser = async ({
     }
 
     // パスワードをハッシュ化
-    const hashedPassword = await argon2.hash(password, {
-      type: argon2.argon2id, // Argon2id を使用
-      memoryCost: 2 ** 16, // メモリコスト
-      timeCost: 3, // 時間コスト (反復回数)
-      parallelism: 1, // 並列処理の数
-    });
+    const hashedPassword = await hash(password,10);
 
     await db.insert(users).values({
       email,

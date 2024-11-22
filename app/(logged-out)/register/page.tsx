@@ -27,15 +27,13 @@ import Link from "next/link";
 
 const formSchema = z
   .object({
-    email: z.string().email("有効なメールアドレスを入力してください"), // 日本語のカスタムメッセージ
+    email: z.string().email("有効なメールアドレスを入力してください"), 
   })
   .and(passwordMatchSchema);
 
 export default function Register() {
-  //z.infer Zodライブラリで定義したスキーマから自動的にTypeScriptの型を推論するための機能
-  //useForm Reactでフォームを簡単に扱えるようにするためのreact-hook-formのフックです。このフックを使うと、フォームの入力値、バリデーション、送信処理などが簡単に管理できます。
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema), //フォームのバリデーションルールを指定するオプション
+    resolver: zodResolver(formSchema),
     defaultValues: {
       //各入力フィールドの初期値を設定するためのオプション
       email: "",

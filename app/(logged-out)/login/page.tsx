@@ -25,14 +25,13 @@ import { loginWithCredentials } from "./actions";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-
 const formSchema = z.object({
   email: z.string().email("有効なメールアドレスを入力してください"),
   password: passwordSchema,
 });
 
 export default function Login() {
-  const router = useRouter()
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,15 +46,17 @@ export default function Login() {
       password: data.password,
     });
 
-    if(response?.error){
-      form.setError("root",{
-        message:response.message
-      })
-
-    }else{
+    if (response?.error) {
+      form.setError("root", {
+        message: response.message,
+      });
+    } else {
       router.push("/my-account");
     }
   };
+
+  const email = form.getValues("email");
+
   return (
     <main className="flex justify-center items-center min-h-screen">
       <Card className="w-[350px]">
@@ -96,10 +97,11 @@ export default function Login() {
                     </FormItem>
                   )}
                 />
-                {!!form.formState.errors.root?.message &&
-                <FormMessage>
-                  {form.formState.errors.root.message}
-                  </FormMessage>}
+                {!!form.formState.errors.root?.message && (
+                  <FormMessage>
+                    {form.formState.errors.root.message}
+                  </FormMessage>
+                )}
                 <Button type="submit" className="mt-2">
                   ログイン
                 </Button>
@@ -109,10 +111,16 @@ export default function Login() {
         </CardContent>
         <CardFooter className="flex-col gap-2">
           <div className="text-muted-foreground text-xs">
-            アカウントを持っていないですか？{" "}<Link href="/register" className="underline">新規登録</Link>
+            アカウントを持っていないですか？{" "}
+            <Link href="/register" className="underline">
+              新規登録
+            </Link>
           </div>
           <div className="text-muted-foreground text-xs">
-            パスワードを忘れましたか？{" "}<Link href="/password-reset" className="underline">パスワードリセット</Link>
+            パスワードを忘れましたか？{" "}
+            <Link href={`/password-reset${email ? `?email=${encodeURIComponent(email)}`:''}`} className="underline">
+              パスワードリセット
+            </Link>
           </div>
         </CardFooter>
       </Card>

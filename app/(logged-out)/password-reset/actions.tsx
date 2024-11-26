@@ -53,10 +53,13 @@ export const passwordReset = async (emailAddress: string) => {
     from: "test@resend.dev",
     subject: "パスワードリセットのご案内",
     to: emailAddress,
-    html: `こんにちは、${emailAddress}様。
-パスワードリセットのリクエストを受け付けました。以下のリンクからパスワードをリセットしてください。
-このリンクは1時間で無効になります。<a href="${resetLink}">${resetLink}</a>`,
+    html: `
+    <p>こんにちは、${emailAddress}様。</p>
+    <p>パスワードリセットのリクエストを受け付けました。以下のリンクからパスワードをリセットしてください。</p>
+    <p>このリンクは1時間で無効になります。</p>
+    <a href="${resetLink}" target="_blank">${resetLink}</a>
+  `,
   });
 
-  console.log(passwordResetToken);
+  // console.log(passwordResetToken);
 };
